@@ -70,8 +70,8 @@ function textEnd($tmp){
     }
     $abstract = isset($abstract) ? $abstract : '';
 
-    if(preg_match('/^#REDIRECT \[\[(.+?)\]\]$/', $tmp['text'], $m) === 1)
-        $abstract = "{$m[1]}へ転送";
+    if(preg_match('/^#(REDIRECT|転送) \[\[(.+?)\]\]$/', $tmp['text'], $m) === 1)
+        $abstract = "{$m[2]}へ転送";
 
     $replacePattern = array(
         '/\[\[([^\|]+)\]\]/U',
