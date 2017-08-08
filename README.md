@@ -6,14 +6,14 @@ Wikipediaの全ページのXMLデータである `jawiki-latest-pages-articles.x
 完全に全てのページの要約文を抽出できるわけではない。
 
 ```
-$ cat jawiki-latest-pages-articles.xml | grep "<page>" | wc -l
-2188542
+$ cat jawiki-latest-pages-articles.xml | grep "<title>" | grep -v "<title>Wikipedia:" | grep -v "<title>Help:" | grep -v "<title>ファイル:" | wc -l
+1991020
 
 $sqlite3 wiki_articles.sqlite3 "select count(*) from wikipedia;"
 1990962
 ```
 
-このようにかなり抽出できていないページがある。
+このように抽出できていないページが58件ある。
 
 冒頭の要約文にあるリンクも除去しようとしたが、記法が多岐にわたっていて難しいので諦めた。
 
