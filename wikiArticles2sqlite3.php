@@ -10,8 +10,8 @@ if(file_exists($SQLITE_FILE)){
 }
 
 $db = new SQLite3($SQLITE_FILE);
-$db->exec("create table ${SQLITE_TABLE_NAME}(title, abstract)");
-$db->exec('begin');
+$db->exec("CREATE TABLE ${SQLITE_TABLE_NAME}(title TEXT, abstract TEXT)");
+$db->exec('BEGIN');
 
 $file = fopen($WIKI_XML_FILE, 'r');
 
@@ -48,12 +48,8 @@ while($line = fgets($file)){
 }
 fclose($file);
 
-$db->exec('commit');
+$db->exec('COMMIT');
 $db->close();
-
-function escapeQuote($str){
-    return str_replace("'", "''", $str);
-}
 
 function textEnd($tmp){
     // TEXT END
@@ -88,9 +84,10 @@ function textEnd($tmp){
 
     $abstract = strip_tags($abstract);
 
-    $escapedTitle = escapeQuote($tmp['title']);
-    $escapedAbstract = escapeQuote($abstract);
     global $db, $SQLITE_TABLE_NAME;
-    $db->exec("insert into $SQLITE_TABLE_NAME values('${escapedTitle}', '${escapedAbstract}')");
+    $stmt = $db->prepare("INSERT INTO ${SQLITE_TABLE_NAME} VALUES(:title, :abstract)");
+    $stmt->bindValue(':title', $tmp['title'], SQLITE3_TEXT);
+    $stmt->bindValue(':abstract', $abstract, SQLITE3_TEXT);
+    $stmt->execute();
 }
 
